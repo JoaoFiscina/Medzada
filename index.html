@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerador de Palavras Cruzadas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Importe. Gere. Jogue.</p>
+        <h1>Monte palavras cruzadas a partir do seu arquivo</h1>
+        <p class="hero-text">
+          Envie um arquivo com os codigos, palavras e dicas. O site processa os dados, monta o tabuleiro e libera a partida na hora com geracao calibrada para dificuldade mediana a dificil.
+        </p>
+      </div>
+      <div class="hero-card">
+        <h2>Formato aceito</h2>
+        <p>Use <strong>JSON</strong> ou <strong>CSV</strong> com os campos <code>code</code>, <code>word</code> e <code>clue</code>.</p>
+        <pre>{
+  "entries": [
+    { "code": "A1", "word": "ABACATE", "clue": "Fruta verde e cremosa" },
+    { "code": "B2", "word": "BANANA", "clue": "Fruta amarela" }
+  ]
+}</pre>
+      </div>
+    </section>
+
+    <section class="panel control-panel">
+      <div class="panel-header">
+        <div>
+          <p class="eyebrow">1. Dados</p>
+          <h2>Importar arquivo</h2>
+        </div>
+        <button id="loadSampleButton" class="ghost-button" type="button">Carregar exemplo</button>
+      </div>
+
+      <label class="upload-box" for="fileInput">
+        <input id="fileInput" type="file" accept=".json,.csv,.txt">
+        <span class="upload-title">Escolher arquivo</span>
+        <span class="upload-subtitle">Selecione um arquivo JSON ou CSV com as palavras.</span>
+      </label>
+
+      <div class="manual-area">
+        <label for="manualInput">Ou cole os dados manualmente</label>
+        <textarea id="manualInput" rows="10" placeholder='code,word,clue&#10;A1,CADERNO,Objeto usado para anotar&#10;B2,CANETA,Item usado para escrever'></textarea>
+      </div>
+
+      <div class="actions">
+        <button id="generateButton" class="primary-button" type="button">Gerar palavras cruzadas</button>
+        <button id="checkButton" class="secondary-button" type="button" disabled>Conferir respostas</button>
+        <button id="revealButton" class="secondary-button" type="button" disabled>Revelar tudo</button>
+      </div>
+
+      <div id="statusMessage" class="status-message" role="status" aria-live="polite"></div>
+      <p class="helper-text">O gerador prioriza cruzamentos reais entre palavras e evita grades faceis demais.</p>
+    </section>
+
+    <section class="workspace">
+      <div class="panel board-panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">2. Jogo</p>
+            <h2>Tabuleiro</h2>
+          </div>
+          <span id="boardMeta" class="board-meta">Nenhum tabuleiro gerado</span>
+        </div>
+        <div id="board" class="board-empty">
+          <p>Importe um arquivo para gerar o jogo.</p>
+        </div>
+      </div>
+
+      <aside class="panel clues-panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">3. Dicas</p>
+            <h2>Pistas do jogo</h2>
+          </div>
+        </div>
+        <div class="clues-columns">
+          <div>
+            <h3>Horizontal</h3>
+            <ol id="acrossClues" class="clue-list"></ol>
+          </div>
+          <div>
+            <h3>Vertical</h3>
+            <ol id="downClues" class="clue-list"></ol>
+          </div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
