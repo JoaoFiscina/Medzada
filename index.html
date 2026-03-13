@@ -11,17 +11,17 @@
 </head>
 <body class="app-body">
   <main class="app-shell">
-    <section class="hero">
+    <section class="hero hidden-in-game">
       <div class="hero-copy">
         <p class="eyebrow">Importe. Gere. Jogue.</p>
         <h1>Monte palavras cruzadas a partir do seu arquivo</h1>
         <p class="hero-text">
-          Envie um arquivo com os codigos, palavras e dicas. O site processa os dados, monta o tabuleiro e libera a partida na hora com geracao calibrada para dificuldade mediana a dificil.
+          Envie um arquivo com codigos, palavras e dicas. O site processa os dados, monta o tabuleiro e libera a partida na hora com foco em cruzamentos consistentes.
         </p>
       </div>
       <div class="hero-card">
-        <h2>Formato aceito</h2>
-        <p>Use <strong>JSON</strong>, <strong>CSV</strong>, <strong>TSV</strong> ou linhas de texto com campos de codigo, palavra e dica.</p>
+        <h2>Formatos aceitos</h2>
+        <p>Use <strong>JSON</strong>, <strong>CSV</strong>, <strong>TSV</strong> ou linhas de texto com codigo, palavra e dica.</p>
         <pre>{
   "entries": [
     { "code": "A1", "word": "ABACATE", "clue": "Fruta verde e cremosa" },
@@ -36,7 +36,7 @@ B2 | CANETA | Item usado para escrever</pre>
       </div>
     </section>
 
-    <section class="panel control-panel">
+    <section class="panel control-panel hidden-in-game">
       <div class="panel-header">
         <div>
           <p class="eyebrow">1. Dados</p>
@@ -54,7 +54,7 @@ B2 | CANETA | Item usado para escrever</pre>
 
         <div class="manual-area">
           <label for="manualInput">Ou cole os dados manualmente</label>
-          <textarea id="manualInput" rows="8" placeholder='Aceito nestes formatos:&#10;&#10;JSON: {"entries":[{"code":"A1","word":"CADERNO","clue":"Objeto usado para anotar"}]}&#10;&#10;CSV: code,word,clue&#10;A1,CADERNO,Objeto usado para anotar&#10;&#10;Ponto e virgula: code;word;clue&#10;A1;CADERNO;Objeto usado para anotar&#10;&#10;Texto: A1 | CADERNO | Objeto usado para anotar'></textarea>
+          <textarea id="manualInput" rows="7" placeholder='Aceito nestes formatos:&#10;&#10;JSON: {"entries":[{"code":"A1","word":"CADERNO","clue":"Objeto usado para anotar"}]}&#10;&#10;CSV: code,word,clue&#10;A1,CADERNO,Objeto usado para anotar&#10;&#10;Ponto e virgula: code;word;clue&#10;A1;CADERNO;Objeto usado para anotar&#10;&#10;Texto: A1 | CADERNO | Objeto usado para anotar'></textarea>
         </div>
       </div>
 
@@ -73,6 +73,10 @@ B2 | CANETA | Item usado para escrever</pre>
       </ul>
     </section>
 
+    <section class="game-mode-toolbar only-in-game" aria-label="Controles do modo jogo">
+      <button id="exitGameModeButton" class="secondary-button exit-game-button" type="button">Sair do modo jogo</button>
+    </section>
+
     <section class="workspace">
       <div class="panel board-panel">
         <div class="panel-header">
@@ -81,8 +85,8 @@ B2 | CANETA | Item usado para escrever</pre>
             <h2>Tabuleiro</h2>
           </div>
           <div class="header-actions">
-            <span id="boardMeta" class="board-meta">Nenhum tabuleiro gerado</span>
-            <button id="focusModeButton" class="ghost-button" type="button">Modo jogo</button>
+            <span id="boardMeta" class="board-meta hidden-on-game-mode">Nenhum tabuleiro gerado</span>
+            <button id="focusModeButton" class="ghost-button" type="button" disabled>Modo jogo</button>
           </div>
         </div>
         <div id="board" class="board-empty">
@@ -96,7 +100,6 @@ B2 | CANETA | Item usado para escrever</pre>
             <p class="eyebrow">3. Dicas</p>
             <h2>Pistas do jogo</h2>
           </div>
-          <button id="backToPanelButton" class="ghost-button hidden" type="button">Voltar ao painel</button>
         </div>
         <div class="clues-columns">
           <div>

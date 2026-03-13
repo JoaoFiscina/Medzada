@@ -15,7 +15,8 @@ const state = {
   entries: [],
   placement: null,
   cellMap: new Map(),
-  engineReady: false
+  engineReady: false,
+  gameModeActive: false
 };
 
 const fileInput = document.querySelector("#fileInput");
@@ -30,7 +31,7 @@ const boardMeta = document.querySelector("#boardMeta");
 const acrossClues = document.querySelector("#acrossClues");
 const downClues = document.querySelector("#downClues");
 const focusModeButton = document.querySelector("#focusModeButton");
-const backToPanelButton = document.querySelector("#backToPanelButton");
+const exitGameModeButton = document.querySelector("#exitGameModeButton");
 
 fileInput.addEventListener("change", handleFileImport);
 generateButton.addEventListener("click", handleGenerate);
@@ -41,7 +42,8 @@ loadSampleButton.addEventListener("click", () => {
 checkButton.addEventListener("click", checkAnswers);
 revealButton.addEventListener("click", revealAnswers);
 focusModeButton.addEventListener("click", enableFocusMode);
-backToPanelButton.addEventListener("click", disableFocusMode);
+exitGameModeButton.addEventListener("click", disableFocusMode);
+document.addEventListener("keydown", handleGlobalKeydown);
 
 boot();
 
@@ -87,11 +89,14 @@ function handleGenerate() {
     renderClues(placement.words);
     checkButton.disabled = false;
     revealButton.disabled = false;
+    focusModeButton.disabled = false;
     boardMeta.textContent = `${placement.rows} linhas x ${placement.cols} colunas | ${placement.words.length} palavras | dificuldade ${placement.difficultyLabel}`;
     setStatus("Palavras cruzadas geradas com sucesso.", "success");
   } catch (error) {
+    setGameMode(false);
     checkButton.disabled = true;
     revealButton.disabled = true;
+    focusModeButton.disabled = true;
     boardMeta.textContent = "Nenhum tabuleiro gerado";
     board.className = "board-empty";
     board.innerHTML = `<p>${escapeHtml(error.message)}</p>`;
@@ -717,15 +722,43 @@ function setStatus(message, tone) {
 }
 
 function enableFocusMode() {
-  document.body.classList.add("focus-mode");
-  backToPanelButton.classList.remove("hidden");
-  focusModeButton.classList.add("hidden");
+  if (!state.placement) {
+    setStatus("Gere um tabuleiro antes de entrar no modo jogo.", "danger");
+    return;
+  }
+
+  setGameMode(true);
 }
 
 function disableFocusMode() {
-  document.body.classList.remove("focus-mode");
-  backToPanelButton.classList.add("hidden");
-  focusModeButton.classList.remove("hidden");
+  setGameMode(false);
+}
+
+function setGameMode(active) {
+  const shouldActivate = Boolean(active && state.placement);
+  if (state.gameModeActive === shouldActivate) {
+    return;
+  }
+
+  state.gameModeActive = shouldActivate;
+  document.body.classList.toggle("game-mode", shouldActivate);
+  focusModeButton.hidden = shouldActivate;
+  focusModeButton.classList.toggle("game-mode-active", shouldActivate);
+  focusModeButton.setAttribute("aria-pressed", String(shouldActivate));
+  exitGameModeButton.setAttribute("aria-hidden", String(!shouldActivate));
+
+  if (shouldActivate) {
+    requestAnimationFrame(() => exitGameModeButton.focus());
+    return;
+  }
+
+  requestAnimationFrame(() => focusModeButton.focus());
+}
+
+function handleGlobalKeydown(event) {
+  if (event.key === "Escape" && state.gameModeActive) {
+    setGameMode(false);
+  }
 }
 
 function escapeHtml(text) {

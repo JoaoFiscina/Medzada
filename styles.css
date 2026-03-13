@@ -1,20 +1,24 @@
 :root {
-  --bg: #f7f3ec;
-  --surface: rgba(255, 255, 252, 0.82);
-  --surface-strong: #fffdf8;
-  --line: #ddd4c5;
-  --text: #2f2923;
-  --muted: #7a6c5f;
-  --accent: #b46842;
-  --accent-deep: #7d4326;
+  --bg: #f6f4ef;
+  --surface: rgba(255, 255, 253, 0.88);
+  --surface-strong: #fffdf9;
+  --line: #ddd7ce;
+  --line-strong: #cdc4b7;
+  --text: #26231f;
+  --muted: #6f675f;
+  --accent: #ae6a47;
+  --accent-deep: #7d472d;
   --success: #2b7a4b;
   --danger: #aa3a2a;
-  --shadow: 0 18px 45px rgba(64, 44, 28, 0.08);
-  --board-bg: #efe8dc;
-  --board-hole: rgba(112, 89, 65, 0.14);
-  --cell-bg: #fbfaf6;
-  --cell-hit: #f0f8f1;
-  --cell-cross: #eef6f7;
+  --shadow: 0 14px 34px rgba(34, 29, 24, 0.08);
+  --shadow-soft: 0 8px 18px rgba(34, 29, 24, 0.05);
+  --board-bg: #ece8df;
+  --board-hole: #666b68;
+  --board-hole-soft: #7b817d;
+  --cell-bg: #fcfbf7;
+  --cell-hit: #eef8f0;
+  --cell-cross: #edf6f8;
+  --cell-focus: rgba(174, 106, 71, 0.22);
 }
 
 * {
@@ -27,9 +31,9 @@ body {
   font-family: "Manrope", sans-serif;
   color: var(--text);
   background:
-    radial-gradient(circle at top left, rgba(223, 192, 154, 0.22), transparent 28%),
-    radial-gradient(circle at bottom right, rgba(180, 120, 86, 0.12), transparent 30%),
-    linear-gradient(135deg, #faf7f1 0%, #f1e8dc 50%, #f7f2ea 100%);
+    radial-gradient(circle at top left, rgba(214, 201, 181, 0.24), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(177, 158, 140, 0.14), transparent 30%),
+    linear-gradient(135deg, #faf8f4 0%, #f0ebe3 50%, #f7f4ef 100%);
 }
 
 .app-shell {
@@ -45,27 +49,30 @@ body {
 }
 
 .hero {
-  grid-template-columns: 1.4fr 1fr;
+  grid-template-columns: 1.35fr 1fr;
   margin-bottom: 20px;
 }
 
 .hero-copy,
 .hero-card,
 .panel {
-  border: 1px solid rgba(133, 95, 58, 0.14);
-  border-radius: 22px;
+  border: 1px solid rgba(98, 80, 61, 0.11);
+  border-radius: 24px;
   background: var(--surface);
-  backdrop-filter: blur(14px);
+  backdrop-filter: blur(16px);
   box-shadow: var(--shadow);
+  transition: transform 160ms ease, box-shadow 160ms ease, opacity 160ms ease;
 }
 
 .hero-copy,
-.hero-card {
-  padding: 24px;
+.hero-card,
+.panel {
+  padding: 22px;
 }
 
 .hero h1,
-.panel h2 {
+.panel h2,
+.clues-columns h3 {
   margin: 0;
   font-family: "Fraunces", serif;
   font-weight: 700;
@@ -73,7 +80,7 @@ body {
 }
 
 .hero h1 {
-  font-size: clamp(2.2rem, 4vw, 4.2rem);
+  font-size: clamp(2.3rem, 4vw, 4.1rem);
   line-height: 1;
   max-width: 11ch;
 }
@@ -87,7 +94,7 @@ body {
 
 .eyebrow {
   margin: 0 0 10px;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -96,7 +103,7 @@ body {
 
 .hero-card h2,
 .panel h2 {
-  font-size: 1.5rem;
+  font-size: 1.48rem;
   margin-bottom: 10px;
 }
 
@@ -110,21 +117,17 @@ body {
   margin-top: 12px;
   padding: 12px 14px;
   border-radius: 16px;
-  background: #f3ede2;
-  color: #4a3c31;
+  background: #f6f1e8;
+  color: #4a4036;
   font-size: 0.86rem;
   border: 1px solid rgba(120, 92, 64, 0.08);
-}
-
-.panel {
-  padding: 20px;
 }
 
 .panel-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 16px;
-  align-items: flex-start;
   margin-bottom: 18px;
 }
 
@@ -134,21 +137,22 @@ body {
 
 .control-grid {
   display: grid;
-  grid-template-columns: minmax(250px, 320px) minmax(0, 1fr);
-  gap: 14px;
+  grid-template-columns: minmax(240px, 310px) minmax(0, 1fr);
+  gap: 16px;
   margin-bottom: 16px;
 }
 
 .upload-box {
   display: grid;
-  gap: 4px;
-  margin-bottom: 0;
+  gap: 6px;
   min-height: 100%;
   padding: 18px;
   border: 1.5px dashed var(--line);
   border-radius: 18px;
-  background: rgba(255, 253, 248, 0.82);
+  background: rgba(255, 253, 248, 0.88);
   cursor: pointer;
+  align-content: start;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
 }
 
 .upload-box input {
@@ -167,7 +171,6 @@ body {
 .manual-area {
   display: grid;
   gap: 10px;
-  margin-bottom: 0;
 }
 
 .manual-area label {
@@ -182,7 +185,8 @@ textarea {
   padding: 14px;
   font: inherit;
   color: var(--text);
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
 }
 
 .actions {
@@ -194,37 +198,44 @@ textarea {
 button {
   border: 0;
   border-radius: 999px;
-  padding: 13px 20px;
+  padding: 12px 18px;
   font: inherit;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 140ms ease, opacity 140ms ease, background-color 140ms ease;
+  transition: transform 140ms ease, opacity 140ms ease, background-color 140ms ease, box-shadow 140ms ease;
 }
 
 button:hover {
   transform: translateY(-1px);
+  box-shadow: var(--shadow-soft);
 }
 
 button:disabled {
   cursor: not-allowed;
   opacity: 0.45;
   transform: none;
+  box-shadow: none;
 }
 
 .primary-button {
-  background: linear-gradient(135deg, var(--accent) 0%, #d57f35 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--accent) 0%, #d28a57 100%);
+  color: #fff;
 }
 
 .secondary-button,
 .ghost-button {
   color: var(--text);
-  background: #f0e3cb;
+  background: #f3ece1;
 }
 
 .ghost-button {
-  background: transparent;
+  background: rgba(255, 255, 255, 0.62);
   border: 1px solid var(--line);
+}
+
+.game-mode-active {
+  background: #efe4d8;
+  border-color: var(--line-strong);
 }
 
 .status-message {
@@ -254,20 +265,31 @@ button:disabled {
   color: var(--danger);
 }
 
+.game-mode-toolbar {
+  display: none;
+  margin: 0 0 14px;
+}
+
+.exit-game-button {
+  background: rgba(255, 255, 255, 0.92);
+}
+
 .workspace {
   grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
   align-items: start;
+  gap: 20px;
 }
 
 #board {
   overflow: auto;
-  border-radius: 18px;
-  padding: 18px;
+  border-radius: 22px;
+  padding: 24px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.2)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.54), rgba(255, 255, 255, 0.2)),
     var(--board-bg);
-  min-height: 280px;
+  min-height: 320px;
   border: 1px solid rgba(124, 96, 67, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
 }
 
 .board-empty {
@@ -278,32 +300,34 @@ button:disabled {
 
 .crossword-grid {
   display: grid;
-  gap: 3px;
+  gap: 5px;
   width: fit-content;
   margin: 0 auto;
 }
 
 .cell {
   position: relative;
-  width: clamp(34px, 4vw, 42px);
-  height: clamp(34px, 4vw, 42px);
-  border-radius: 9px;
+  width: clamp(36px, 4vw, 44px);
+  height: clamp(36px, 4vw, 44px);
+  border-radius: 12px;
   background: transparent;
 }
 
 .cell.filled {
   background: var(--cell-bg);
-  border: 1px solid rgba(115, 87, 58, 0.14);
-  box-shadow: inset 0 -1px 0 rgba(112, 88, 61, 0.04);
+  border: 1px solid rgba(115, 87, 58, 0.12);
+  box-shadow: inset 0 -1px 0 rgba(112, 88, 61, 0.04), 0 1px 2px rgba(63, 52, 43, 0.04);
 }
 
 .cell.blocked {
-  background: var(--board-hole);
-  border: 1px solid transparent;
+  background: linear-gradient(180deg, var(--board-hole-soft), var(--board-hole));
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .cell.intersection {
   background: var(--cell-cross);
+  border-color: rgba(104, 143, 153, 0.18);
 }
 
 .cell input {
@@ -316,20 +340,20 @@ button:disabled {
   color: var(--text);
   font: inherit;
   font-weight: 800;
-  border-radius: 9px;
+  border-radius: 12px;
 }
 
 .cell input:focus {
   outline: none;
-  box-shadow: inset 0 0 0 2px rgba(180, 104, 66, 0.25);
-  background: rgba(255, 255, 255, 0.8);
+  box-shadow: inset 0 0 0 2px var(--cell-focus);
+  background: rgba(255, 255, 255, 0.84);
 }
 
 .cell-number {
   position: absolute;
-  top: 3px;
-  left: 5px;
-  font-size: 0.62rem;
+  top: 4px;
+  left: 6px;
+  font-size: 0.6rem;
   color: var(--accent-deep);
   font-weight: 800;
   pointer-events: none;
@@ -345,32 +369,31 @@ button:disabled {
 
 .clues-columns {
   display: grid;
-  gap: 18px;
+  gap: 20px;
 }
 
 .clues-columns h3 {
-  margin: 0 0 10px;
-  font-family: "Fraunces", serif;
+  margin-bottom: 10px;
 }
 
 .clue-list {
   margin: 0;
   padding-left: 20px;
   display: grid;
-  gap: 10px;
+  gap: 12px;
 }
 
 .clue-list li {
   color: var(--muted);
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 .clue-code {
   display: inline-block;
   margin-right: 8px;
-  padding: 1px 8px;
+  padding: 2px 8px;
   border-radius: 999px;
-  background: #efe6d6;
+  background: #efe7db;
   color: var(--accent-deep);
   font-size: 0.78rem;
   font-weight: 800;
@@ -384,26 +407,50 @@ button:disabled {
   justify-content: flex-end;
 }
 
-.hidden {
+.only-in-game {
   display: none;
 }
 
-.app-body.focus-mode .hero,
-.app-body.focus-mode .control-panel {
-  display: none;
+.app-body.game-mode .only-in-game {
+  display: flex;
 }
 
-.app-body.focus-mode .app-shell {
-  width: min(1400px, calc(100% - 24px));
+.app-body.game-mode .hidden-in-game {
+  display: none !important;
+}
+
+.app-body.game-mode .hidden-on-game-mode {
+  display: none !important;
+}
+
+.app-body.game-mode .app-shell {
+  width: min(1380px, calc(100% - 24px));
   padding-top: 20px;
 }
 
-.app-body.focus-mode .workspace {
-  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+.app-body.game-mode .workspace {
+  grid-template-columns: minmax(0, 1.45fr) minmax(290px, 0.68fr);
+  gap: 18px;
 }
 
-.app-body.focus-mode .panel {
-  padding: 18px;
+.app-body.game-mode .panel {
+  padding: 20px;
+}
+
+.app-body.game-mode .board-panel,
+.app-body.game-mode .clues-panel {
+  min-height: calc(100vh - 140px);
+}
+
+.app-body.game-mode #board {
+  min-height: calc(100vh - 240px);
+}
+
+@media (max-width: 1100px) {
+  .workspace,
+  .app-body.game-mode .workspace {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 920px) {
@@ -411,5 +458,45 @@ button:disabled {
   .hero,
   .workspace {
     grid-template-columns: 1fr;
+  }
+
+  .panel-header {
+    align-items: flex-start;
+  }
+
+  .header-actions {
+    justify-content: flex-start;
+  }
+
+  #board {
+    padding: 18px;
+  }
+
+  .crossword-grid {
+    gap: 4px;
+  }
+
+  .cell {
+    width: clamp(34px, 7vw, 42px);
+    height: clamp(34px, 7vw, 42px);
+  }
+}
+
+@media (max-width: 640px) {
+  .app-shell {
+    width: min(100%, calc(100% - 20px));
+    padding: 20px 0 28px;
+  }
+
+  .hero-copy,
+  .hero-card,
+  .panel {
+    border-radius: 20px;
+    padding: 18px;
+  }
+
+  .actions,
+  .header-actions {
+    gap: 8px;
   }
 }
