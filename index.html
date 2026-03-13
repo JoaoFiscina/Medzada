@@ -21,13 +21,18 @@
       </div>
       <div class="hero-card">
         <h2>Formato aceito</h2>
-        <p>Use <strong>JSON</strong> ou <strong>CSV</strong> com os campos <code>code</code>, <code>word</code> e <code>clue</code>.</p>
+        <p>Use <strong>JSON</strong>, <strong>CSV</strong>, <strong>TSV</strong> ou linhas de texto com campos de codigo, palavra e dica.</p>
         <pre>{
   "entries": [
     { "code": "A1", "word": "ABACATE", "clue": "Fruta verde e cremosa" },
     { "code": "B2", "word": "BANANA", "clue": "Fruta amarela" }
   ]
 }</pre>
+        <pre>code;word;clue
+A1;CADERNO;Objeto usado para anotar
+B2;CANETA;Item usado para escrever</pre>
+        <pre>A1 | CADERNO | Objeto usado para anotar
+B2 | CANETA | Item usado para escrever</pre>
       </div>
     </section>
 
@@ -48,7 +53,7 @@
 
       <div class="manual-area">
         <label for="manualInput">Ou cole os dados manualmente</label>
-        <textarea id="manualInput" rows="10" placeholder='code,word,clue&#10;A1,CADERNO,Objeto usado para anotar&#10;B2,CANETA,Item usado para escrever'></textarea>
+        <textarea id="manualInput" rows="12" placeholder='Aceito nestes formatos:&#10;&#10;JSON: {"entries":[{"code":"A1","word":"CADERNO","clue":"Objeto usado para anotar"}]}&#10;&#10;CSV: code,word,clue&#10;A1,CADERNO,Objeto usado para anotar&#10;&#10;Ponto e virgula: code;word;clue&#10;A1;CADERNO;Objeto usado para anotar&#10;&#10;Texto: A1 | CADERNO | Objeto usado para anotar'></textarea>
       </div>
 
       <div class="actions">
@@ -59,6 +64,11 @@
 
       <div id="statusMessage" class="status-message" role="status" aria-live="polite"></div>
       <p class="helper-text">O gerador prioriza cruzamentos reais entre palavras e evita grades faceis demais.</p>
+      <ul class="format-list">
+        <li>Campos aceitos para codigo: <code>code</code>, <code>codigo</code>, <code>cod</code>, <code>id</code>.</li>
+        <li>Campos aceitos para palavra: <code>word</code>, <code>palavra</code>, <code>termo</code>, <code>answer</code>.</li>
+        <li>Campos aceitos para dica: <code>clue</code>, <code>dica</code>, <code>pista</code>, <code>hint</code>, <code>description</code>.</li>
+      </ul>
     </section>
 
     <section class="workspace">

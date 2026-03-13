@@ -225,6 +225,13 @@ button:disabled {
   line-height: 1.6;
 }
 
+.format-list {
+  margin: 10px 0 0;
+  padding-left: 20px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
 .status-message[data-tone="success"] {
   color: var(--success);
 }
