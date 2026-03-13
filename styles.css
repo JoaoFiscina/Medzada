@@ -1,15 +1,20 @@
 :root {
-  --bg: #f4efe5;
-  --surface: rgba(255, 252, 247, 0.88);
-  --surface-strong: #fffaf1;
-  --line: #d9c8a9;
-  --text: #35261b;
-  --muted: #735d49;
-  --accent: #c75c2f;
-  --accent-deep: #8c3410;
+  --bg: #f7f3ec;
+  --surface: rgba(255, 255, 252, 0.82);
+  --surface-strong: #fffdf8;
+  --line: #ddd4c5;
+  --text: #2f2923;
+  --muted: #7a6c5f;
+  --accent: #b46842;
+  --accent-deep: #7d4326;
   --success: #2b7a4b;
   --danger: #aa3a2a;
-  --shadow: 0 18px 60px rgba(91, 53, 25, 0.12);
+  --shadow: 0 18px 45px rgba(64, 44, 28, 0.08);
+  --board-bg: #efe8dc;
+  --board-hole: rgba(112, 89, 65, 0.14);
+  --cell-bg: #fbfaf6;
+  --cell-hit: #f0f8f1;
+  --cell-cross: #eef6f7;
 }
 
 * {
@@ -22,9 +27,9 @@ body {
   font-family: "Manrope", sans-serif;
   color: var(--text);
   background:
-    radial-gradient(circle at top left, rgba(230, 181, 113, 0.3), transparent 28%),
-    radial-gradient(circle at bottom right, rgba(199, 92, 47, 0.18), transparent 35%),
-    linear-gradient(135deg, #f7f2e9 0%, #eee4d2 50%, #f5ecdd 100%);
+    radial-gradient(circle at top left, rgba(223, 192, 154, 0.22), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(180, 120, 86, 0.12), transparent 30%),
+    linear-gradient(135deg, #faf7f1 0%, #f1e8dc 50%, #f7f2ea 100%);
 }
 
 .app-shell {
@@ -48,15 +53,15 @@ body {
 .hero-card,
 .panel {
   border: 1px solid rgba(133, 95, 58, 0.14);
-  border-radius: 24px;
+  border-radius: 22px;
   background: var(--surface);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(14px);
   box-shadow: var(--shadow);
 }
 
 .hero-copy,
 .hero-card {
-  padding: 28px;
+  padding: 24px;
 }
 
 .hero h1,
@@ -102,16 +107,17 @@ body {
 
 .hero-card pre {
   overflow: auto;
-  margin-top: 16px;
-  padding: 14px;
-  border-radius: 18px;
-  background: #2b2017;
-  color: #f6eadb;
-  font-size: 0.9rem;
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: #f3ede2;
+  color: #4a3c31;
+  font-size: 0.86rem;
+  border: 1px solid rgba(120, 92, 64, 0.08);
 }
 
 .panel {
-  padding: 24px;
+  padding: 20px;
 }
 
 .panel-header {
@@ -126,14 +132,22 @@ body {
   margin-bottom: 20px;
 }
 
+.control-grid {
+  display: grid;
+  grid-template-columns: minmax(250px, 320px) minmax(0, 1fr);
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
 .upload-box {
   display: grid;
   gap: 4px;
-  margin-bottom: 18px;
-  padding: 24px;
+  margin-bottom: 0;
+  min-height: 100%;
+  padding: 18px;
   border: 1.5px dashed var(--line);
-  border-radius: 22px;
-  background: rgba(255, 250, 241, 0.72);
+  border-radius: 18px;
+  background: rgba(255, 253, 248, 0.82);
   cursor: pointer;
 }
 
@@ -153,7 +167,7 @@ body {
 .manual-area {
   display: grid;
   gap: 10px;
-  margin-bottom: 18px;
+  margin-bottom: 0;
 }
 
 .manual-area label {
@@ -164,11 +178,11 @@ textarea {
   width: 100%;
   resize: vertical;
   border: 1px solid var(--line);
-  border-radius: 18px;
-  padding: 16px;
+  border-radius: 16px;
+  padding: 14px;
   font: inherit;
   color: var(--text);
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.8);
 }
 
 .actions {
@@ -247,10 +261,13 @@ button:disabled {
 
 #board {
   overflow: auto;
-  border-radius: 22px;
-  padding: 20px;
-  background: rgba(255, 250, 241, 0.72);
+  border-radius: 18px;
+  padding: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.2)),
+    var(--board-bg);
   min-height: 280px;
+  border: 1px solid rgba(124, 96, 67, 0.08);
 }
 
 .board-empty {
@@ -261,21 +278,32 @@ button:disabled {
 
 .crossword-grid {
   display: grid;
-  gap: 2px;
+  gap: 3px;
   width: fit-content;
+  margin: 0 auto;
 }
 
 .cell {
   position: relative;
   width: clamp(34px, 4vw, 42px);
   height: clamp(34px, 4vw, 42px);
-  border-radius: 10px;
-  background: #2b2017;
+  border-radius: 9px;
+  background: transparent;
 }
 
 .cell.filled {
-  background: #fffdf9;
-  border: 1px solid rgba(102, 72, 46, 0.15);
+  background: var(--cell-bg);
+  border: 1px solid rgba(115, 87, 58, 0.14);
+  box-shadow: inset 0 -1px 0 rgba(112, 88, 61, 0.04);
+}
+
+.cell.blocked {
+  background: var(--board-hole);
+  border: 1px solid transparent;
+}
+
+.cell.intersection {
+  background: var(--cell-cross);
 }
 
 .cell input {
@@ -288,6 +316,13 @@ button:disabled {
   color: var(--text);
   font: inherit;
   font-weight: 800;
+  border-radius: 9px;
+}
+
+.cell input:focus {
+  outline: none;
+  box-shadow: inset 0 0 0 2px rgba(180, 104, 66, 0.25);
+  background: rgba(255, 255, 255, 0.8);
 }
 
 .cell-number {
@@ -301,7 +336,7 @@ button:disabled {
 }
 
 .cell.correct {
-  background: #effaf2;
+  background: var(--cell-hit);
 }
 
 .cell.wrong {
@@ -335,13 +370,44 @@ button:disabled {
   margin-right: 8px;
   padding: 1px 8px;
   border-radius: 999px;
-  background: #efe0c1;
+  background: #efe6d6;
   color: var(--accent-deep);
   font-size: 0.78rem;
   font-weight: 800;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.hidden {
+  display: none;
+}
+
+.app-body.focus-mode .hero,
+.app-body.focus-mode .control-panel {
+  display: none;
+}
+
+.app-body.focus-mode .app-shell {
+  width: min(1400px, calc(100% - 24px));
+  padding-top: 20px;
+}
+
+.app-body.focus-mode .workspace {
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+}
+
+.app-body.focus-mode .panel {
+  padding: 18px;
+}
+
 @media (max-width: 920px) {
+  .control-grid,
   .hero,
   .workspace {
     grid-template-columns: 1fr;

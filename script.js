@@ -29,6 +29,8 @@ const board = document.querySelector("#board");
 const boardMeta = document.querySelector("#boardMeta");
 const acrossClues = document.querySelector("#acrossClues");
 const downClues = document.querySelector("#downClues");
+const focusModeButton = document.querySelector("#focusModeButton");
+const backToPanelButton = document.querySelector("#backToPanelButton");
 
 fileInput.addEventListener("change", handleFileImport);
 generateButton.addEventListener("click", handleGenerate);
@@ -38,6 +40,8 @@ loadSampleButton.addEventListener("click", () => {
 });
 checkButton.addEventListener("click", checkAnswers);
 revealButton.addEventListener("click", revealAnswers);
+focusModeButton.addEventListener("click", enableFocusMode);
+backToPanelButton.addEventListener("click", disableFocusMode);
 
 boot();
 
@@ -540,11 +544,14 @@ function renderBoard(placement) {
 
   const numbers = new Map(placement.words.map((word) => [`${word.row}:${word.col}`, word.number]));
   const occupied = new Set();
+  const occupancyCount = new Map();
   placement.words.forEach((word) => {
     for (let index = 0; index < word.word.length; index += 1) {
       const row = word.direction === "across" ? word.row : word.row + index;
       const col = word.direction === "across" ? word.col + index : word.col;
-      occupied.add(`${row}:${col}`);
+      const key = `${row}:${col}`;
+      occupied.add(key);
+      occupancyCount.set(key, (occupancyCount.get(key) ?? 0) + 1);
     }
   });
 
@@ -552,9 +559,13 @@ function renderBoard(placement) {
     for (let col = 0; col < placement.cols; col += 1) {
       const cell = document.createElement("div");
       cell.className = "cell";
+      const key = `${row}:${col}`;
 
-      if (occupied.has(`${row}:${col}`)) {
+      if (occupied.has(key)) {
         cell.classList.add("filled");
+        if ((occupancyCount.get(key) ?? 0) > 1) {
+          cell.classList.add("intersection");
+        }
 
         const input = document.createElement("input");
         input.maxLength = 1;
@@ -565,15 +576,17 @@ function renderBoard(placement) {
           moveToNextCell(row, col);
         });
         cell.appendChild(input);
-        state.cellMap.set(`${row}:${col}`, input);
+        state.cellMap.set(key, input);
 
-        const number = numbers.get(`${row}:${col}`);
+        const number = numbers.get(key);
         if (number) {
           const badge = document.createElement("span");
           badge.className = "cell-number";
           badge.textContent = number;
           cell.appendChild(badge);
         }
+      } else {
+        cell.classList.add("blocked");
       }
 
       gridElement.appendChild(cell);
@@ -701,6 +714,18 @@ function revealAnswers() {
 function setStatus(message, tone) {
   statusMessage.textContent = message;
   statusMessage.dataset.tone = tone;
+}
+
+function enableFocusMode() {
+  document.body.classList.add("focus-mode");
+  backToPanelButton.classList.remove("hidden");
+  focusModeButton.classList.add("hidden");
+}
+
+function disableFocusMode() {
+  document.body.classList.remove("focus-mode");
+  backToPanelButton.classList.add("hidden");
+  focusModeButton.classList.remove("hidden");
 }
 
 function escapeHtml(text) {

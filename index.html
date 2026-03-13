@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="app-body">
   <main class="app-shell">
     <section class="hero">
       <div class="hero-copy">
@@ -45,15 +45,17 @@ B2 | CANETA | Item usado para escrever</pre>
         <button id="loadSampleButton" class="ghost-button" type="button">Carregar exemplo</button>
       </div>
 
-      <label class="upload-box" for="fileInput">
-        <input id="fileInput" type="file" accept=".json,.csv,.txt">
-        <span class="upload-title">Escolher arquivo</span>
-        <span class="upload-subtitle">Selecione um arquivo JSON ou CSV com as palavras.</span>
-      </label>
+      <div class="control-grid">
+        <label class="upload-box" for="fileInput">
+          <input id="fileInput" type="file" accept=".json,.csv,.txt">
+          <span class="upload-title">Escolher arquivo</span>
+          <span class="upload-subtitle">Selecione um arquivo JSON, CSV, TSV ou TXT com as palavras.</span>
+        </label>
 
-      <div class="manual-area">
-        <label for="manualInput">Ou cole os dados manualmente</label>
-        <textarea id="manualInput" rows="12" placeholder='Aceito nestes formatos:&#10;&#10;JSON: {"entries":[{"code":"A1","word":"CADERNO","clue":"Objeto usado para anotar"}]}&#10;&#10;CSV: code,word,clue&#10;A1,CADERNO,Objeto usado para anotar&#10;&#10;Ponto e virgula: code;word;clue&#10;A1;CADERNO;Objeto usado para anotar&#10;&#10;Texto: A1 | CADERNO | Objeto usado para anotar'></textarea>
+        <div class="manual-area">
+          <label for="manualInput">Ou cole os dados manualmente</label>
+          <textarea id="manualInput" rows="8" placeholder='Aceito nestes formatos:&#10;&#10;JSON: {"entries":[{"code":"A1","word":"CADERNO","clue":"Objeto usado para anotar"}]}&#10;&#10;CSV: code,word,clue&#10;A1,CADERNO,Objeto usado para anotar&#10;&#10;Ponto e virgula: code;word;clue&#10;A1;CADERNO;Objeto usado para anotar&#10;&#10;Texto: A1 | CADERNO | Objeto usado para anotar'></textarea>
+        </div>
       </div>
 
       <div class="actions">
@@ -78,7 +80,10 @@ B2 | CANETA | Item usado para escrever</pre>
             <p class="eyebrow">2. Jogo</p>
             <h2>Tabuleiro</h2>
           </div>
-          <span id="boardMeta" class="board-meta">Nenhum tabuleiro gerado</span>
+          <div class="header-actions">
+            <span id="boardMeta" class="board-meta">Nenhum tabuleiro gerado</span>
+            <button id="focusModeButton" class="ghost-button" type="button">Modo jogo</button>
+          </div>
         </div>
         <div id="board" class="board-empty">
           <p>Importe um arquivo para gerar o jogo.</p>
@@ -91,6 +96,7 @@ B2 | CANETA | Item usado para escrever</pre>
             <p class="eyebrow">3. Dicas</p>
             <h2>Pistas do jogo</h2>
           </div>
+          <button id="backToPanelButton" class="ghost-button hidden" type="button">Voltar ao painel</button>
         </div>
         <div class="clues-columns">
           <div>
