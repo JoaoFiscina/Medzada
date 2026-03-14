@@ -15,8 +15,10 @@ const state = {
   entries: [],
   placement: null,
   cellMap: new Map(),
+  cellWordMap: new Map(),
   engineReady: false,
-  gameModeActive: false
+  gameModeActive: false,
+  activeDirection: "across"
 };
 
 const fileInput = document.querySelector("#fileInput");
@@ -540,6 +542,7 @@ function numberWords(words) {
 
 function renderBoard(placement) {
   state.cellMap.clear();
+  state.cellWordMap.clear();
   board.className = "";
   board.innerHTML = "";
 
@@ -557,6 +560,9 @@ function renderBoard(placement) {
       const key = `${row}:${col}`;
       occupied.add(key);
       occupancyCount.set(key, (occupancyCount.get(key) ?? 0) + 1);
+      const cellWords = state.cellWordMap.get(key) ?? {};
+      cellWords[word.direction] = word;
+      state.cellWordMap.set(key, cellWords);
     }
   });
 
@@ -576,9 +582,21 @@ function renderBoard(placement) {
         input.maxLength = 1;
         input.autocomplete = "off";
         input.setAttribute("aria-label", `Letra ${row + 1}-${col + 1}`);
+        input.addEventListener("focus", () => {
+          syncDirectionForCell(key);
+        });
+        input.addEventListener("click", () => {
+          syncDirectionForCell(key);
+        });
+        input.addEventListener("keydown", (event) => {
+          handleCellKeydown(event, row, col);
+        });
         input.addEventListener("input", () => {
           input.value = normalizeWord(input.value).slice(0, 1);
-          moveToNextCell(row, col);
+          syncDirectionForCell(key);
+          if (input.value) {
+            moveWithinActiveWord(row, col, 1);
+          }
         });
         cell.appendChild(input);
         state.cellMap.set(key, input);
@@ -637,6 +655,118 @@ function moveToNextCell(currentRow, currentCol) {
   if (nextInput) {
     nextInput.focus();
   }
+}
+
+function handleCellKeydown(event, row, col) {
+  const key = `${row}:${col}`;
+  syncDirectionForCell(key);
+
+  if (event.key === "Enter") {
+    event.preventDefault();
+    moveWithinActiveWord(row, col, 1);
+    return;
+  }
+
+  if ((event.key === "ArrowRight" || event.key === "ArrowLeft") && hasDirection(key, "across")) {
+    state.activeDirection = "across";
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      moveWithinActiveWord(row, col, 1);
+    } else {
+      event.preventDefault();
+      moveWithinActiveWord(row, col, -1);
+    }
+    return;
+  }
+
+  if ((event.key === "ArrowDown" || event.key === "ArrowUp") && hasDirection(key, "down")) {
+    state.activeDirection = "down";
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      moveWithinActiveWord(row, col, 1);
+    } else {
+      event.preventDefault();
+      moveWithinActiveWord(row, col, -1);
+    }
+    return;
+  }
+
+  if (event.key === "Backspace") {
+    const input = state.cellMap.get(key);
+    if (input && !input.value) {
+      event.preventDefault();
+      moveWithinActiveWord(row, col, -1);
+    }
+  }
+}
+
+function moveWithinActiveWord(row, col, step) {
+  const key = `${row}:${col}`;
+  const cellWords = state.cellWordMap.get(key);
+  if (!cellWords) {
+    moveToNextCell(row, col);
+    return;
+  }
+
+  const direction = pickDirectionForCell(cellWords);
+  const activeWord = cellWords[direction];
+  if (!activeWord) {
+    moveToNextCell(row, col);
+    return;
+  }
+
+  const position = getPositionInWord(activeWord, row, col);
+  if (position === -1) {
+    moveToNextCell(row, col);
+    return;
+  }
+
+  const targetIndex = position + step;
+  if (targetIndex < 0 || targetIndex >= activeWord.word.length) {
+    return;
+  }
+
+  const targetRow = activeWord.direction === "across" ? activeWord.row : activeWord.row + targetIndex;
+  const targetCol = activeWord.direction === "across" ? activeWord.col + targetIndex : activeWord.col;
+  const nextInput = state.cellMap.get(`${targetRow}:${targetCol}`);
+  if (nextInput) {
+    nextInput.focus();
+    nextInput.select();
+  }
+}
+
+function getPositionInWord(word, row, col) {
+  for (let index = 0; index < word.word.length; index += 1) {
+    const currentRow = word.direction === "across" ? word.row : word.row + index;
+    const currentCol = word.direction === "across" ? word.col + index : word.col;
+    if (currentRow === row && currentCol === col) {
+      return index;
+    }
+  }
+  return -1;
+}
+
+function syncDirectionForCell(key) {
+  const cellWords = state.cellWordMap.get(key);
+  if (!cellWords) {
+    return;
+  }
+
+  state.activeDirection = pickDirectionForCell(cellWords);
+}
+
+function pickDirectionForCell(cellWords) {
+  if (cellWords[state.activeDirection]) {
+    return state.activeDirection;
+  }
+  if (cellWords.across) {
+    return "across";
+  }
+  return "down";
+}
+
+function hasDirection(key, direction) {
+  return Boolean(state.cellWordMap.get(key)?.[direction]);
 }
 
 function renderClues(words) {
